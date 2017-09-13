@@ -1,43 +1,21 @@
-import { applyMiddleware, createStore } from "redux";
-import axios from "axios";
-import logger from "redux-logger";
-import thunk from "redux-thunk";
-import promise from "redux-promise-middleware";
+import { createStore } from "redux";
 
-const initialState = {
-  fetching: false,
-  fetched: false,
-  users: [],
-  error: null,
-};
-
-const reducer = (state=initialState, action) => {
-  switch (action.type) {
-    case "FETCH_USERS_PENDING": {
-      return {...state, fetching: true}
-      break;
-    }
-    case "FETCH_USERS_REJECTED": {
-      return {...state, fetching: false, error: action.payload}
-      break;
-    }
-    case "FETCH_USERS_FULFILLED": {
-      return {
-        ...state,
-        fetching: false,
-        fetched: true,
-        users: action.payload,
-      }
-      break;
-    }
+const reducer = (state, action) => {
+  if (action.type === "INC") {
+    return state + 1;
   }
-  return state
+  return state;
 }
 
-const middleware = applyMiddleware(promise(), thunk, logger())
-const store = createStore(reducer, middleware)
+const store = createStore(reducer, 0);
 
-store.dispatch({
-  type: "FETCH_USERS",
-  payload: axios.get("http://rest.learncode.academy/api/wstern/users")
-})
+store.subscribe(() => {
+  console.log("OMG! the store has changed", store.getState())
+} )
+
+store.dispatch({type: "INC", payload: 1})
+store.dispatch({type: "INC", payload: 1})
+store.dispatch({type: "INC", payload: 1})
+store.dispatch({type: "INC", payload: 1})
+store.dispatch({type: "INC", payload: 1})
+store.dispatch({type: "INC", payload: 1})
