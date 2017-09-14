@@ -1,21 +1,33 @@
-import { createStore } from "redux";
+import { combineReducers, createStore } from "redux";
 
-const reducer = (state, action) => {
-  if (action.type === "INC") {
-    return state + 1;
+const userReducer = (state={}, action) => {
+  switch (action.type) {
+    case "CHANGE_NAME": {
+      state = {...state, name: action.payload} 
+      break;
+    }  
+    case "CHANGE_AGE":{
+      state = {...state, age: action.payload}       
+      break;
+    }
   }
   return state;
 }
 
-const store = createStore(reducer, 0);
+const tweetsReducer = (state=[], action) => {
+  return state;
+}
+
+const reducers = combineReducers({
+  user: userReducer,
+  tweets: tweetsReducer
+})
+
+const store = createStore(reducers);
 
 store.subscribe(() => {
-  console.log("OMG! the store has changed", store.getState())
+  console.log("OMG! store changed", store.getState())
 } )
 
-store.dispatch({type: "INC", payload: 1})
-store.dispatch({type: "INC", payload: 1})
-store.dispatch({type: "INC", payload: 1})
-store.dispatch({type: "INC", payload: 1})
-store.dispatch({type: "INC", payload: 1})
-store.dispatch({type: "INC", payload: 1})
+store.dispatch({type: "CHANGE_NAME", payload: "Adrian"})
+store.dispatch({type: "CHANGE_AGE", payload: 35})
